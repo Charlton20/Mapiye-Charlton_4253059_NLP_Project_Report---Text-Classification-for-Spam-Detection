@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Text Classification for Spam Detection</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm 18mm 20mm 18mm;
+    }
+    body {
+      color: #1f2933;
+      font-family: "Liberation Serif", "Times New Roman", serif;
+      font-size: 11.5pt;
+      line-height: 1.45;
+    }
+    main {
+      max-width: 100%;
+    }
+    h1, h2, h3 {
+      color: #111827;
+      font-family: "Liberation Sans", Arial, sans-serif;
+      line-height: 1.2;
+      margin: 1.05em 0 0.45em;
+      page-break-after: avoid;
+    }
+    h1 {
+      font-size: 21pt;
+      margin-top: 0;
+      text-align: center;
+    }
+    h2 {
+      border-bottom: 1px solid #d1d5db;
+      font-size: 15pt;
+      padding-bottom: 0.15em;
+    }
+    h3 {
+      font-size: 12.5pt;
+    }
+    p {
+      margin: 0 0 0.7em;
+      text-align: justify;
+    }
+    ul {
+      margin: 0 0 0.8em 1.2em;
+      padding: 0;
+    }
+    li {
+      margin: 0.2em 0;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 9.4pt;
+      margin: 0.6em 0 1em;
+      page-break-inside: avoid;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 5px 6px;
+      vertical-align: top;
+    }
+    th {
+      background: #eef2f7;
+      font-family: "Liberation Sans", Arial, sans-serif;
+      font-weight: 700;
+      text-align: left;
+    }
+    code {
+      background: #f3f4f6;
+      border-radius: 3px;
+      font-family: "Liberation Mono", monospace;
+      font-size: 0.9em;
+      padding: 1px 3px;
+    }
+    strong {
+      color: #111827;
+    }
+  </style>
+</head>
+<body>
+  <main>
+<h1>Text Classification for Spam Detection Using Supervised Machine Learning</h1>
+<p><strong>Course:</strong> DLBAIPNLP01 - Project: NLP <strong>Project type:</strong> Text Classification for Spam Detection <strong>Repository link:</strong> To be added after publication on GitHub or GitLab</p>
+<h2>Abstract</h2>
+<p>Spam messages are unsolicited messages that can expose users to phishing, fraud, and malware. This project develops a supervised natural language processing system that classifies short text messages as either legitimate or spam. The system uses the UCI SMS Spam Collection dataset, applies text normalization, stop-word removal, stemming, and feature encoding, and compares several machine learning pipelines. The evaluated models include Multinomial Naive Bayes, Linear Support Vector Classification, and Logistic Regression with Bag-of-Words and TF-IDF representations. The experiments are conducted progressively with subsets of 500, 1,500, 3,000, and 5,572 messages. On the full dataset, the best-performing configuration is Multinomial Naive Bayes with count-based features. It achieves an accuracy of 0.985, precision of 0.965, recall of 0.919, and F1-score of 0.942 on the held-out test set.</p>
+<h2>1. Introduction</h2>
+<p>Spam detection is a practical text classification problem in natural language processing. The objective of this project is to develop an NLP system that can distinguish legitimate messages from spam messages using supervised machine learning. The final product is a reproducible Python pipeline that downloads a public dataset, preprocesses messages, trains multiple classification models, evaluates them on held-out test data, and saves a trained model for later prediction.</p>
+<p>The planned procedure follows the project task requirements. First, a labeled spam detection dataset is collected. Second, the text is preprocessed through normalization, stop-word removal, and stemming. Third, the text is encoded for use in machine learning models. Fourth, supervised classifiers are trained and evaluated. Finally, the trained model is used to classify new messages. The system is evaluated progressively, beginning with a small dataset and increasing the amount of available data until the complete dataset is used.</p>
+<h2>2. Theoretical Background and Related Work</h2>
+<p>Text classification is a supervised NLP task in which a model learns a relationship between text inputs and predefined labels. In spam detection, the input is a message and the label indicates whether the message is legitimate or spam. Before traditional machine learning models can process text, the text must be transformed into numerical features.</p>
+<p>Two common feature extraction approaches are Bag-of-Words and Term Frequency-Inverse Document Frequency. Bag-of-Words represents documents by token counts. TF-IDF weights terms according to their frequency within a document and their rarity across the corpus. This project evaluates three classical supervised models: Multinomial Naive Bayes, Linear Support Vector Classification, and Logistic Regression.</p>
+<p>The evaluation uses accuracy, precision, recall, F1-score, and a confusion matrix. Accuracy alone is insufficient because the dataset is imbalanced. Precision measures how many predicted spam messages are actually spam. Recall measures how many real spam messages are detected. F1-score balances precision and recall. These metrics are important because false positives and false negatives have different practical consequences.</p>
+<h2>3. Project Planning and Resources</h2>
+<p>The project was planned as a sequence of practical phases: dataset acquisition, preprocessing and feature extraction, model training, evaluation across multiple dataset sizes, and documentation. The selected dataset was the UCI SMS Spam Collection because it is public, labeled, and directly relevant to the project task.</p>
+<p>The software resources used were Python 3.12, pandas, scikit-learn, NLTK, matplotlib, and joblib. Pandas was used for dataset loading and summary statistics. Scikit-learn was used for vectorization, train-test splitting, model training, and evaluation. NLTK was used for stemming. Matplotlib was used to generate the confusion matrix plot. Joblib was used to save the trained model.</p>
+<p>Several risks were considered. The first risk was class imbalance, since legitimate messages are far more common than spam messages. This was addressed with stratified train-test splitting and by reporting precision, recall, and F1-score. The second risk was overfitting on smaller samples, which was addressed through held-out test sets and progressive evaluation. The third risk was limited dataset scope, because the dataset contains SMS messages rather than all modern email or phishing formats.</p>
+<h2>4. Dataset and Preprocessing</h2>
+<p>The UCI SMS Spam Collection contains 5,572 labeled messages. Each message is labeled as <code>ham</code> or <code>spam</code>, where <code>ham</code> represents a legitimate message.</p>
+<table>
+<thead><tr>
+<th>Class</th>
+<th>Count</th>
+<th>Percentage</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Legitimate</td>
+<td>4,825</td>
+<td>86.59%</td>
+</tr>
+<tr>
+<td>Spam</td>
+<td>747</td>
+<td>13.41%</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>5,572</td>
+<td>100.00%</td>
+</tr>
+</tbody></table>
+<p>The average message length is approximately 80.62 characters. The preprocessing pipeline lowercases text, replaces URLs with a marker, replaces numbers with a marker, removes punctuation and repeated whitespace, removes English stop words, and applies Snowball stemming. The processed tokens are encoded with CountVectorizer and TfidfVectorizer. Both vectorizers use unigrams and bigrams because short phrases can be informative in spam detection.</p>
+<h2>5. Model Development</h2>
+<p>The dataset was evaluated progressively with four dataset sizes: 500, 1,500, 3,000, and 5,572 messages. Each subset was sampled with stratification so that the spam-to-legitimate ratio remained representative. For every dataset size, an 80/20 train-test split was used. The random state was fixed to make the results reproducible.</p>
+<table>
+<thead><tr>
+<th>Configuration</th>
+<th>Vectorizer</th>
+<th>Classifier</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>MultinomialNB + Count</td>
+<td>Bag-of-Words</td>
+<td>Multinomial Naive Bayes</td>
+</tr>
+<tr>
+<td>MultinomialNB + TF-IDF</td>
+<td>TF-IDF</td>
+<td>Multinomial Naive Bayes</td>
+</tr>
+<tr>
+<td>LinearSVC + TF-IDF</td>
+<td>TF-IDF</td>
+<td>Linear Support Vector Classification</td>
+</tr>
+<tr>
+<td>Logistic Regression + TF-IDF</td>
+<td>TF-IDF</td>
+<td>Logistic Regression</td>
+</tr>
+</tbody></table>
+<p>The final saved model was selected from the full-dataset experiments because the full dataset provides the most defensible basis for a practical spam detection system.</p>
+<h2>6. Results and Evaluation</h2>
+<p>The strongest full-dataset result was achieved by Multinomial Naive Bayes with count-based features.</p>
+<table>
+<thead><tr>
+<th>Dataset Size</th>
+<th>Model</th>
+<th>Vectorizer</th>
+<th>Accuracy</th>
+<th>Precision</th>
+<th>Recall</th>
+<th>F1-score</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1,500</td>
+<td>MultinomialNB</td>
+<td>Count</td>
+<td>0.990</td>
+<td>0.974</td>
+<td>0.950</td>
+<td>0.962</td>
+</tr>
+<tr>
+<td>5,572</td>
+<td>MultinomialNB</td>
+<td>Count</td>
+<td>0.985</td>
+<td>0.965</td>
+<td>0.919</td>
+<td>0.942</td>
+</tr>
+<tr>
+<td>1,500</td>
+<td>LinearSVC</td>
+<td>TF-IDF</td>
+<td>0.980</td>
+<td>0.886</td>
+<td>0.975</td>
+<td>0.929</td>
+</tr>
+<tr>
+<td>5,572</td>
+<td>LinearSVC</td>
+<td>TF-IDF</td>
+<td>0.980</td>
+<td>0.910</td>
+<td>0.946</td>
+<td>0.928</td>
+</tr>
+<tr>
+<td>5,572</td>
+<td>Logistic Regression</td>
+<td>TF-IDF</td>
+<td>0.962</td>
+<td>0.806</td>
+<td>0.946</td>
+<td>0.870</td>
+</tr>
+<tr>
+<td>5,572</td>
+<td>MultinomialNB</td>
+<td>TF-IDF</td>
+<td>0.965</td>
+<td>1.000</td>
+<td>0.738</td>
+<td>0.849</td>
+</tr>
+</tbody></table>
+<p>On the full held-out test set of 1,115 messages, the best model achieved 0.985 accuracy, 0.965 spam precision, 0.919 spam recall, and 0.942 spam F1-score. The TF-IDF Naive Bayes model had perfect precision on the full dataset, but its recall was much lower. LinearSVC achieved higher recall, but lower precision. The final model therefore represents a useful balance, especially because false positives can hide legitimate communication.</p>
+<h2>7. Reflection</h2>
+<p>The project objective was achieved. A complete NLP system was created that collects a labeled dataset, preprocesses text, trains supervised models, evaluates performance, and classifies new messages. The project also meets the requirement to evaluate different scenarios by testing multiple dataset sizes and multiple model configurations.</p>
+<p>The strongest methodological feature is reproducibility. The dataset can be downloaded with one script, the experiments can be rerun with one command, and the outputs are written to a dedicated directory. The main limitation is that the dataset is relatively small and SMS-specific. The system should not automatically be generalized to modern email spam, multilingual spam, or phishing campaigns with images and shortened links.</p>
+<p>Future improvements could include larger and more recent datasets, cross-validation, hyperparameter tuning, threshold tuning, and comparison with transformer-based models. A small user interface or API could also be added to demonstrate practical integration.</p>
+<h2>8. Conclusion</h2>
+<p>This project developed a supervised NLP system for spam detection. The final pipeline uses the UCI SMS Spam Collection dataset, text normalization, stop-word removal, stemming, Bag-of-Words and TF-IDF encoding, and classical machine learning models. The best full-dataset result was achieved by Multinomial Naive Bayes with count-based features. It reached 0.985 accuracy and 0.942 spam F1-score on the held-out test set.</p>
+<p>The results show that simple, well-structured NLP methods can be highly effective for spam detection when the data is clean and the evaluation process is carefully designed. Further work should focus on broader datasets, more recent spam patterns, threshold tuning, and comparison with neural language models.</p>
+<h2>References</h2>
+<p>Almeida, T. A., Hidalgo, J. M. G., &amp; Yamakami, A. (2011). Contributions to the study of SMS spam filtering: new collection and results. <em>Proceedings of the 11th ACM Symposium on Document Engineering</em>.</p>
+<p>Elakkiya, E., Selvakumar, S., &amp; Leela Velusamy, R. (2021). TextSpamDetector: textual content based deep learning framework for social spam detection using conjoint attention mechanism. <em>Journal of Ambient Intelligence and Humanized Computing, 12</em>(10), 9287-9302.</p>
+<p>Huan, H., Guo, Z., Cai, T., &amp; He, Z. (2022). A text classification method based on a convolutional and bidirectional long short-term memory model. <em>Connection Science, 34</em>(1), 2108-2124.</p>
+<p>Jurafsky, D., &amp; Martin, J. (2013). <em>Speech and language processing: An introduction to natural language processing, computational linguistics, and speech recognition</em> (2nd ed.). Pearson Prentice Hall.</p>
+<p>UCI Machine Learning Repository. (n.d.). <em>SMS Spam Collection</em>. https://archive.ics.uci.edu/dataset/228/sms+spam+collection</p>
+  </main>
+</body>
+</html>

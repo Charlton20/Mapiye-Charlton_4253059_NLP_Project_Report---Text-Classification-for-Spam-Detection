@@ -1,0 +1,12 @@
+{
+  "total_messages": 5572,
+  "label_counts": {
+    "ham": 4825,
+    "spam": 747
+  },
+  "label_percentages": {
+    "ham": 86.59,
+    "spam": 13.41
+  },
+  "average_message_length_characters": 80.62
+}

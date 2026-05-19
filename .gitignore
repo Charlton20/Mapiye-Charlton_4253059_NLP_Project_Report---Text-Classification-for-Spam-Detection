@@ -1,0 +1,12 @@
+.venv/
+.python_packages/
+.matplotlib/
+.agents/
+.codex/
+.project_git/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+data/raw/
+outputs/best_model.joblib
